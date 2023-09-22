@@ -56,7 +56,10 @@ export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
           </DropdownMenuItem>
         )}
         {isAdmin && (
-          <DropdownMenuItem className="px-3 py-2 text-sm cursor-pointer">
+          <DropdownMenuItem
+            className="px-3 py-2 text-sm cursor-pointer"
+            onClick={() => onOpen("members", { server })}
+          >
             멤버 관리 <Users className="h-4 w-4 ml-auto" />
           </DropdownMenuItem>
         )}
@@ -70,12 +73,18 @@ export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
         )}
         {isModerator && <DropdownMenuSeparator />}
         {isAdmin && (
-          <DropdownMenuItem className="text-rose-500 px-3 py-2 text-sm cursor-pointer">
+          <DropdownMenuItem
+            className="text-rose-500 px-3 py-2 text-sm cursor-pointer"
+            onClick={() => onOpen("deleteServer", { server })}
+          >
             서버 삭제하기 <Trash className="h-4 w-4 ml-auto" />
           </DropdownMenuItem>
         )}
         {!isAdmin && (
-          <DropdownMenuItem className="text-rose-500 px-3 py-2 text-sm cursor-pointer">
+          <DropdownMenuItem
+            onClick={() => onOpen("leaveServer", { server })}
+            className="text-rose-500 px-3 py-2 text-sm cursor-pointer"
+          >
             서버 나가기 <LogOut className="h-4 w-4 ml-auto" />
           </DropdownMenuItem>
         )}
