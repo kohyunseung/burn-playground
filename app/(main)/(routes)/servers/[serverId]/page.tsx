@@ -1,14 +1,49 @@
-import { SocketIndicator } from "@/components/socket-indicator";
+import { currentUser } from "@/lib/current-user";
+import { db } from "@/lib/db";
+import { redirectToSignIn } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
-const ServerIdPage = () => {
-  return (
-    <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
-      Server Id Page
-      {/* <div className="">
-        <SocketIndicator />
-      </div> */}
-    </div>
-  );
+interface ServerIdPageProps {
+  params: {
+    serverId: string;
+  };
+}
+
+const ServerIdPage = async ({ params }: ServerIdPageProps) => {
+  const user = await currentUser();
+
+  if (!user) {
+    return redirectToSignIn();
+  }
+
+  const server = await db.server.findUnique({
+    where: {
+      id: params.serverId,
+      members: {
+        some: {
+          userId: user.id,
+        },
+      },
+    },
+    include: {
+      channels: {
+        where: {
+          name: "general",
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
+    },
+  });
+
+  const initialChannel = server?.channels[0];
+
+  if (initialChannel?.name !== "general") {
+    return null;
+  }
+
+  return redirect(`/servers/${params.serverId}/channels/${initialChannel?.id}`);
 };
 
 export default ServerIdPage;
