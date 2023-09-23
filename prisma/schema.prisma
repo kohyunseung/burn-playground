@@ -77,7 +77,6 @@ enum ChannelType {
   TEXT
   AUDIO
   VIDEO
-  GAME
 }
 
 model Channel {
